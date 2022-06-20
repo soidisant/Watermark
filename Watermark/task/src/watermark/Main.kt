@@ -8,7 +8,7 @@ import javax.imageio.ImageIO
 import kotlin.system.exitProcess
 
 class Watermark {
-    public interface WatermarkPattern
+    interface WatermarkPattern
     data class Single(val x: Int, val y: Int) : WatermarkPattern
     class Grid : WatermarkPattern
 
@@ -63,10 +63,10 @@ class Watermark {
             val outputBufferedImage = BufferedImage(image.width, image.height, BufferedImage.TYPE_INT_RGB)
             for (x in 0 until image.width) {
                 for (y in 0 until image.height) {
-                    val i = Color(image.getRGB(x, y))
+                    val imageCurrentPixelColor = Color(image.getRGB(x, y))
 
 
-                    val w = if (pattern is Single) {
+                    val waterMarkPixelColor = if (pattern is Single) {
                         if (x in pattern.x until (pattern.x + watermark.width) && y in pattern.y until (pattern.y + watermark.height)) {
                             Color(watermark.getRGB(x - pattern.x, y - pattern.y), useAlpha)
                         } else {
@@ -77,18 +77,18 @@ class Watermark {
                     }
 
                     val color =
-                        if (w == null) {
-                            i
+                        if (waterMarkPixelColor == null) {
+                            imageCurrentPixelColor
                         } else {
-                            if (useAlpha && w.alpha == 0) {
-                                i
-                            } else if (!useAlpha && transparencyColor != null && transparencyColor == w) {
-                                i
+                            if (useAlpha && waterMarkPixelColor.alpha == 0) {
+                                imageCurrentPixelColor
+                            } else if (!useAlpha && transparencyColor != null && transparencyColor == waterMarkPixelColor) {
+                                imageCurrentPixelColor
                             } else {
                                 Color(
-                                    (weight * w.red + (100 - weight) * i.red) / 100,
-                                    (weight * w.green + (100 - weight) * i.green) / 100,
-                                    (weight * w.blue + (100 - weight) * i.blue) / 100
+                                    (weight * waterMarkPixelColor.red + (100 - weight) * imageCurrentPixelColor.red) / 100,
+                                    (weight * waterMarkPixelColor.green + (100 - weight) * imageCurrentPixelColor.green) / 100,
+                                    (weight * waterMarkPixelColor.blue + (100 - weight) * imageCurrentPixelColor.blue) / 100
                                 )
                             }
                         }
@@ -185,8 +185,6 @@ fun main() {
         val output = readln().also {
             if (!(it.endsWith(".jpg") || it.endsWith(".png"))) {
                 throw Exception("The output file extension isn't \"jpg\" or \"png\".")
-            } else {
-                it
             }
         }
         Watermark.createWatermark(image, watermark, transparency, useAlpha, transparencyColor, watermarkPattern, output)

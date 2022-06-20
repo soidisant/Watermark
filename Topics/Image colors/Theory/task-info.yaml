@@ -1,0 +1,18 @@
+type: theory
+files:
+- name: src/Main.kt
+  visible: true
+  text: |
+    // You can experiment here, it won’t be checked
+
+    fun main(args: Array<String>) {
+      // put your code here
+    }
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/14484#comment
+status: Unchecked
+feedback:
+  message: Unable to execute task `Theory`, main method is missing
+  time: Mon, 20 Jun 2022 08:27:50 UTC
+record: -1
+post_submission_on_open: true
